@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {Product} from '../../models/product.interface';
 
@@ -24,7 +24,9 @@ import {Product} from '../../models/product.interface';
           min="10"
           max="1000"
           formControlName="quantity"/>
-        <button type="button">
+        <button
+          type="button"
+          (click)="onAdd()">
           Add Stock
         </button>
       </div>
@@ -40,6 +42,9 @@ export class StockSelectorComponent implements OnInit {
   @Input()
   products: Product[];
 
+  @Output()
+  added = new EventEmitter<any>();
+
 
   constructor() {
   }
@@ -47,4 +52,8 @@ export class StockSelectorComponent implements OnInit {
   ngOnInit() {
   }
 
+  onAdd() {
+    // will contain the pojo (product_id + quantity)
+    this.added.emit(this.parent.get('selector').value);
+  }
 }

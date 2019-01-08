@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
+import {Product} from '../../models/product.interface';
 
 @Component({
   selector: 'app-stock-products',
@@ -13,7 +14,10 @@ import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
 
           <div class="stock-product__content" [formGroupName]="i">
             <div class="stock-product__name">
-              {{ item.value.product_id}}
+              {{  getProduct(item.value.product_id).name }}
+            </div>
+            <div class="stock-product_price">
+              {{  getProduct(item.value.product_id).price | currency: 'USD':true }}
             </div>
             <input
               type="number"
@@ -43,6 +47,9 @@ export class StockProductsComponent implements OnInit {
   @Input()
   parent: FormGroup;
 
+  @Input()
+  map: Map<number, Product>;
+
   @Output()
   removed = new EventEmitter<any>();
 
@@ -50,6 +57,10 @@ export class StockProductsComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  getProduct(id) {
+    return this.map.get(id);
   }
 
   get stocks() {

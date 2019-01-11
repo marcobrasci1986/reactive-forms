@@ -17,13 +17,12 @@ import {Product} from '../../models/product.interface';
             {{ product.name}}
           </option>
         </select>
-
-        <input
-          type="number"
-          step="10"
-          min="10"
-          max="1000"
-          formControlName="quantity"/>
+        <app-stock-counter
+          [step]="10"
+          [min]="10"
+          [max]="1000"
+          formControlName="quantity"
+        ></app-stock-counter>
         <button
           type="button"
           (click)="onAdd()">

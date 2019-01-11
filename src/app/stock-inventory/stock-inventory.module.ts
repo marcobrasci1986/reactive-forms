@@ -8,13 +8,15 @@ import {StockSelectorComponent} from './components/stock-selector/stock-selector
 import {StockProductsComponent} from './components/stock-products/stock-products.component';
 import {HttpClientModule} from '@angular/common/http';
 import {StockInventoryService} from './services/stock-inventory.service';
+import {StockCounterComponent} from './components/stock-counter/stock-counter.component';
 
 @NgModule({
   declarations: [
     StockInventoryComponent,
     StockBranchComponent,
     StockSelectorComponent,
-    StockProductsComponent
+    StockProductsComponent,
+    StockCounterComponent
   ],
   imports: [
     CommonModule,

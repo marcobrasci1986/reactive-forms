@@ -55,5 +55,22 @@ export class StockSelectorComponent implements OnInit {
   onAdd() {
     // will contain the pojo (product_id + quantity)
     this.added.emit(this.parent.get('selector').value);
+
+    // reset: also resets the validation classes (pristine)
+    this.parent.get('selector').reset({
+      product_id: '',
+      quantity: 10
+    });
+
+    // reset only this property, does not reset the vailidation classes (stays dirty)
+    // this.parent.get('selector').patchValue({
+    //   product_id: ''
+    // });
+
+    // reset only this property, does not reset the vailidation classes (stays dirty)
+    // this.parent.get('selector').setValue({
+    //   product_id: '',
+    //   quantity: 10
+    // });
   }
 }

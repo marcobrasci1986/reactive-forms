@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Item, Product} from '../../models/product.interface';
 import {StockInventoryService} from '../../services/stock-inventory.service';
 import {forkJoin} from 'rxjs/observable/forkJoin';
 import {StockValidators} from './stock-inventory.validators';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-stock-inventory',
@@ -67,11 +68,17 @@ export class StockInventoryComponent implements OnInit {
 
   form = this.fb.group({
     store: this.fb.group({
-      branch: ['', [Validators.required, StockValidators.checkBranch]],
+      branch: [
+        '',
+        [Validators.required, StockValidators.checkBranch],
+        [this.validateBranch.bind(this)]
+      ],
       code: ['', Validators.required]
     }),
     selector: this.createStock({}),
-    stock: this.fb.array([])
+    stock: this.fb.array([]),
+  }, {
+    validator: StockValidators.checkStockExists
   });
 
   constructor(
@@ -143,5 +150,14 @@ export class StockInventoryComponent implements OnInit {
     // console.log(group, index);
     const control = this.form.get('stock') as FormArray;
     control.removeAt(index);
+  }
+
+  validateBranch(control: AbstractControl) {
+    return this.stockInventoryService
+      .checkBranchId(control.value).pipe(
+        map((response: boolean) => {
+          return response ? null : {unknownBranch: true};
+        })
+      );
   }
 }

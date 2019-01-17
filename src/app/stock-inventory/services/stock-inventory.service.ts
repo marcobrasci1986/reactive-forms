@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {Item, Product} from '../models/product.interface';
-import {catchError} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 
 @Injectable()
 export class StockInventoryService {
@@ -25,5 +25,18 @@ export class StockInventoryService {
       .pipe(
         catchError((error: any) => Observable.throw(error.json()))
       );
+  }
+
+  checkBranchId(id: string): Observable<boolean> {
+    const params = new HttpParams();
+    const searchParams = params.set('id', id);
+
+    return this.http.get('http://localhost:3000/branches', {params: searchParams}).pipe(
+      map((response: any[]) => {
+        console.log('response: ', response);
+        return !!response.length;
+      }),
+      catchError((error: any) => Observable.throw(error.json()))
+    );
   }
 }

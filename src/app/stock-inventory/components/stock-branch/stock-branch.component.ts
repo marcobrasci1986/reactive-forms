@@ -1,7 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 
-//Start Here Validators object for FormControls 4:46
 @Component({
   selector: 'app-stock-branch',
   styleUrls: ['./stock-branch.component.scss'],
@@ -13,8 +12,11 @@ import {FormGroup} from '@angular/forms';
           placeholder="Branch Id"
           formControlName="branch"/>
 
-        <div class="error" *ngIf="parent.get('store.branch').hasError('required') && parent.get('store.branch').touched">
+        <div class="error" *ngIf="required('branch')">
           Branch id is required
+        </div>
+        <div class="error" *ngIf="invalid">
+          Invalid branch code: 1 letter, 2 numbers
         </div>
         <input
           type="text"
@@ -22,7 +24,7 @@ import {FormGroup} from '@angular/forms';
           formControlName="code"
         />
 
-        <div class="error" *ngIf="parent.get('store.code').hasError('required') && parent.get('store.code').touched">
+        <div class="error" *ngIf="required('code')">
           Manager id is required
         </div>
       </div>
@@ -41,4 +43,22 @@ export class StockBranchComponent implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   * Mutually exclusive with the required message
+   */
+  get invalid() {
+    return this.parent.get('store.branch').hasError('invalidBranch') &&
+      this.parent.get('store.branch').dirty &&
+      !this.required('branch');
+  }
+
+  // touched: focus + blur
+  // dirty: typed interaction
+  required(name: string) {
+    console.log('required');
+    return (
+      this.parent.get(`store.${name}`).hasError('required') &&
+      this.parent.get(`store.${name}`).touched
+    );
+  }
 }
